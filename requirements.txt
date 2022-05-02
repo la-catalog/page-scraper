@@ -1,0 +1,28 @@
+aiodns==3.0.0
+aiohttp==3.8.1
+aiosignal==1.2.0
+async-timeout==4.0.2
+attrs==21.4.0
+black==22.3.0
+Brotli==1.0.9
+cchardet==2.1.7
+cffi==1.15.0
+charset-normalizer==2.0.12
+click==8.1.3
+frozenlist==1.3.0
+idna==3.3
+la-catch==0.0.3
+-e git+https://github.com/thiagola92/headers-gen.git@eb3de03589fca4e9f0354138886ebece821f6aba#egg=la_headers
+la-stopwatch==0.0.2
+multidict==6.0.2
+mypy-extensions==0.4.3
+packaging==21.3
+-e git+https://github.com/thiagola92/page_fetcher.git@6928ae58d2a6dea152776439b0b40cb9cfa8f072#egg=page_fetcher
+pathspec==0.9.0
+platformdirs==2.5.2
+pycares==4.1.2
+pycparser==2.21
+pyparsing==3.0.8
+structlog==21.5.0
+tomli==2.0.1
+yarl==1.7.2
