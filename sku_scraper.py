@@ -1,5 +1,8 @@
-from page_fetcher import Fetcher
 from la_stopwatch import Stopwatch
+from page_fetcher import Fetcher
+from page_parser import Parser
+from page_sku import SKU
+from pydantic import AnyHttpUrl
 from structlog.stdlib import BoundLogger
 
 
@@ -7,19 +10,26 @@ class SkuScraper:
     def __init__(self, logger: BoundLogger):
         self._logger = logger
         self._fetcher = Fetcher(logger=logger)
+        self._parser = Parser(logger=logger)
 
-    async def process(self, urls: list[str], marketplace: str) -> None:
-        stopwatch = Stopwatch()
-        fetch_coroutine = await self._fetcher.fetch(urls=urls, marketplace=marketplace)
-
-        async for text in fetch_coroutine:
-            print(text[:10])
-
-            # TODO: when parser yield str, means that you should scrape the url
-            while (response := None):
-                text = await fetch_coroutine.asend("https://twitter.com/")
-                print(text[:10])
-
+    def on_scrap(self, urls: list[str], marketplace: str, duration: int):
         self._logger.info(
-            "Sku scraped", marketplace=marketplace, duration=str(stopwatch)
+            "Sku scraped", urls=urls, marketplace=marketplace, duration=str(duration)
         )
+
+    @Stopwatch(callback=on_scrap)
+    async def process(self, urls: list[str], marketplace: str) -> None:
+        skus = []
+        fetch_co = await self._fetcher.fetch(urls=urls, marketplace=marketplace)
+
+        async for text, url in fetch_co:
+            parse_gen = self._parser.parse(text=text, url=url, marketplace=marketplace)
+
+            for item in parse_gen:
+                while item:
+                    if isinstance(item, SKU):
+                        skus.append(item)
+                        break
+                    elif isinstance(item, AnyHttpUrl):
+                        text, url = await fetch_co.asend(item)
+                        item = parse_gen.send((text, url))
