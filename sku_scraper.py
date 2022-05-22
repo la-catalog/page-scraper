@@ -14,7 +14,10 @@ class SkuScraper:
 
     def on_scrap(self, urls: list[str], marketplace: str, duration: int):
         self._logger.info(
-            "Sku scraped", urls=urls, marketplace=marketplace, duration=str(duration)
+            event="Sku scraped",
+            urls=urls,
+            marketplace=marketplace,
+            duration=str(duration),
         )
 
     @Stopwatch(callback=on_scrap)
@@ -33,3 +36,10 @@ class SkuScraper:
                     elif isinstance(item, AnyHttpUrl):
                         text, url = await fetch_co.asend(item)
                         item = parse_gen.send((text, url))
+                    else:
+                        self._logger.warning(
+                            event="Item ignored",
+                            urls=urls,
+                            marketplace=marketplace,
+                        )
+                        break
