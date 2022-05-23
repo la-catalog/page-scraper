@@ -8,6 +8,8 @@ flowchart TD
     rabbit --> for_each_message
 
     subgraph for_each_message[for each message]
+        send_skus[send skus]
+        
         subgraph for_each_url[for each url]
             direction TB
             fetch_page[fetch page]
@@ -20,7 +22,7 @@ flowchart TD
             subgraph for_each_item[for each item]
                 direction TB
 
-                add_batch[add to batch]
+                add_sku[add sku]
                 ignore[ignore]
                 fetch_page2[fetch page]
                 parse_page2[parse page]
@@ -28,7 +30,7 @@ flowchart TD
                 is_sku{is sku?}
                 is_url{is url?}
 
-                is_sku --> |yes| add_batch
+                is_sku --> |yes| add_sku
                 is_sku --> |no| is_url
 
                 is_url --> |no| ignore
@@ -39,5 +41,7 @@ flowchart TD
                 parse_page2 --> is_sku
             end
         end
+
+        for_each_url --> send_skus
     end
 ```
