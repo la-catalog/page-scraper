@@ -1,52 +1,43 @@
 # sku-scraper
-![scraper map](res/scraper.bmp)   
 
 # flowchart
 ```mermaid
 flowchart TD
-  rabbit[(RabbitMQ)]
+    rabbit[(RabbitMQ)]
 
-  fetch_page[fetch page]
-  fetch_page2[fetch page]
-  parse_page[parse page]
-  parse_page2[parse page]
-  batch[add to batch]
-  batch2[add to batch]
+    rabbit --> for_each_message
 
-  exist_items{items?}
-  exist_urls{urls?}
-  is_url{url?}
-  is_sku{sku?}
-  is_sku2{sku?}
+    subgraph for_each_message[for each message]
+        subgraph for_each_url[for each url]
+            direction TB
+            fetch_page[fetch page]
+            parse_page[parse page]
 
-  send_skus((send skus))
+            fetch_page --> parse_page
 
-  rabbit --> exist_urls
+            parse_page --> for_each_item
 
-  exist_urls --> |yes| fetch_page
-  exist_urls --> |no| send_skus
+            subgraph for_each_item[for each item]
+                direction TB
 
-  fetch_page --> parse_page
+                add_batch[add to batch]
+                ignore[ignore]
+                fetch_page2[fetch page]
+                parse_page2[parse page]
 
-  parse_page --> exist_items
+                is_sku{is sku?}
+                is_url{is url?}
 
-  exist_items --> |yes| is_sku
-  exist_items --> |no| exist_urls
+                is_sku --> |yes| add_batch
+                is_sku --> |no| is_url
 
-  is_sku --> |no| is_url
-  is_sku --> |yes| batch
+                is_url --> |no| ignore
+                is_url --> |yes| fetch_page2
 
-  batch --> exist_items
+                fetch_page2 --> parse_page2
 
-  is_url --> |yes| fetch_page2
-  is_url --> |no| exist_items
-
-  fetch_page2 --> parse_page2
-
-  parse_page2 --> is_sku2
-
-  is_sku2 --> |yes| batch2
-  is_sku2 --> |no| is_url
-
-  batch2 --> exist_items
+                parse_page2 --> is_sku
+            end
+        end
+    end
 ```
