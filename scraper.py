@@ -29,7 +29,7 @@ class Scraper:
     @Stopwatch(callback=on_finish)
     async def on_message(self, message: IncomingMessage) -> None:
         body = Body.parse_raw(message.body)
-        skus = await self._scrape(urls=body.urls, marketplace=body.marketplace)
+        skus = list(await self._scrape(urls=body.urls, marketplace=body.marketplace))
 
         await message.ack()
 
