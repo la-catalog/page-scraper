@@ -1,3 +1,5 @@
+from typing import AsyncGenerator
+
 from aio_pika import IncomingMessage
 from la_stopwatch import Stopwatch
 from page_fetcher import Fetcher
@@ -15,51 +17,37 @@ class Scraper:
         self._parser = Parser(logger=logger)
 
     def on_finish(self, message: IncomingMessage, duration: int):
-        content = Body.parse_raw(message.body)
+        body = Body.parse_raw(message.body)
 
         self._logger.info(
             event="Sku scraped",
-            urls=content.urls,
-            marketplace=content.marketplace,
+            urls=body.urls,
+            marketplace=body.marketplace,
             duration=str(duration),
         )
 
     @Stopwatch(callback=on_finish)
     async def on_message(self, message: IncomingMessage) -> None:
-        content = Body.parse_raw(message.body)
-        skus = []
-
-        pages = await self._fetcher.fetch(
-            urls=content.urls,
-            marketplace=content.marketplace,
-        )
-
-        async for text, url in pages:
-            items = self._parser.parse(
-                text=text, url=url, marketplace=content.marketplace
-            )
-
-            for item in items:
-                while item:
-                    if isinstance(item, SKU):
-                        skus.append(item)
-                        break
-                    elif isinstance(item, AnyHttpUrl):
-                        text, url = await pages.asend(item)
-                        item = items.send((text, url))
-                    else:
-                        self._logger.warning(
-                            event="Item ignored",
-                            item=str(item),
-                            url=url,
-                            marketplace=content.marketplace,
-                        )
-                        break
+        body = Body.parse_raw(message.body)
+        skus = await self._scrape(urls=body.urls, marketplace=body.marketplace)
 
         await message.ack()
 
-    async def scrape(self, urls: list[str], marketplace: str) -> None:
-        """ """
+    async def _scrape(
+        self, urls: list[str], marketplace: str
+    ) -> AsyncGenerator[SKU, None]:
+        """
+        Scrape URLs and return their SKUs
+
+        This function is a little complicated because:
+            1 - fetcher is a coroutine that can receive
+                a url at any time and return it contents
+            2 - parser is a generator that can receive
+                a content at any time and return an item
+            3 - There is a *while* loop that utilizes
+                both mechanics so at any time parser can
+                pass a URL for the fetcher and get it content
+        """
 
         pages = await self._fetcher.fetch(
             urls=urls,
@@ -70,20 +58,16 @@ class Scraper:
             items = self._parser.parse(text=text, url=url, marketplace=marketplace)
 
             for item in items:
-                while item:
-                    if isinstance(item, SKU):
-                        yield item
-                        break
+                while isinstance(item, AnyHttpUrl):
+                    text, url = await pages.asend(item)
+                    item = items.send((text, url))
 
-                    if isinstance(item, AnyHttpUrl):
-                        text, url = await pages.asend(item)
-                        item = items.send((text, url))
-                        continue
-
+                if isinstance(item, SKU):
+                    yield item
+                else:
                     self._logger.warning(
                         event="Item ignored",
                         item=str(item),
                         url=url,
                         marketplace=marketplace,
                     )
-                    break
