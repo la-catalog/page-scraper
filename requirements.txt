@@ -1,5 +1,7 @@
+aio-pika==8.0.0
 aiodns==3.0.0
 aiohttp==3.8.1
+aiormq==6.3.3
 aiosignal==1.2.0
 async-timeout==4.0.2
 attrs==21.4.0
@@ -11,7 +13,7 @@ cffi==1.15.0
 charset-normalizer==2.0.12
 cssselect==1.1.0
 frozenlist==1.3.0
-gtin==1.3.1631641032
+gtin==1.3.1649173518
 idna==3.3
 la-catch==0.0.3
 la-deep-get==0.0.3
@@ -23,16 +25,19 @@ packaging==21.3
 page-fetcher==0.0.1
 page-parser==0.0.1
 page-sku==0.0.1
+pamqp==3.1.0
 parsel==1.6.0
 pycares==4.1.2
 pycparser==2.21
-pydantic==1.9.0
+pydantic==1.9.1
 pyjson5==1.6.1
 pyparsing==3.0.9
 python-dateutil==2.8.2
 pytz==2022.1
+rabbit-models==0.0.1
 six==1.16.0
 structlog==21.5.0
+text-utility==0.0.1
 typing_extensions==4.2.0
 url-parser==0.0.1
 w3lib==1.22.0
