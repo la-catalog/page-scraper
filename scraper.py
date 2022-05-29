@@ -28,16 +28,8 @@ class Scraper:
 
     @Stopwatch(callback=on_finish)
     async def on_message(self, message: IncomingMessage) -> None:
-        body = Body.parse_raw(message.body)
-        skus = list(await self._scrape(urls=body.urls, marketplace=body.marketplace))
-
-        await message.ack()
-
-    async def _scrape(
-        self, urls: list[str], marketplace: str
-    ) -> AsyncGenerator[SKU, None]:
         """
-        Scrape URLs and return their SKUs
+        Scrape URLs and send their SKUs to database.
 
         This function is a little complicated because:
             1 - fetcher is a coroutine that can receive
@@ -48,14 +40,15 @@ class Scraper:
                 both mechanics so at any time the parser can
                 pass a URL for the fetcher and get it content
         """
+        body = Body.parse_raw(message.body)
 
         pages = await self._fetcher.fetch(
-            urls=urls,
-            marketplace=marketplace,
+            urls=body.urls,
+            marketplace=body.marketplace,
         )
 
         async for text, url in pages:
-            items = self._parser.parse(text=text, url=url, marketplace=marketplace)
+            items = self._parser.parse(text=text, url=url, marketplace=body.marketplace)
 
             for item in items:
                 while isinstance(item, AnyHttpUrl):
@@ -69,5 +62,7 @@ class Scraper:
                         event="Item ignored",
                         item=str(item),
                         url=url,
-                        marketplace=marketplace,
+                        marketplace=body.marketplace,
                     )
+
+        await message.ack()
