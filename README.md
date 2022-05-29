@@ -5,43 +5,60 @@
 flowchart TD
     rabbit[(RabbitMQ)]
 
-    rabbit --> for_each_message
+    wait_message[wait message]
+    get_first_url[get first url]
+    get_first_item[get first item]
+    fetch_page[fetch page]
+    parse_page[parse page]
+    ignore_item[ignore item]
+    save_item[save item]
+    get_next_item[get next item]
+    get_next_url[get next url]
+    send_items[send items]
 
-    subgraph for_each_message[for each message]
-        send_skus[send skus]
-        
-        subgraph for_each_url[for each url]
-            direction TB
-            fetch_page[fetch page]
-            parse_page[parse page]
+    receive_message[/receive message/]
 
-            fetch_page --> parse_page
+    any_url{any url?}
+    any_item{any item?}
+    is_url{is url?}
+    is_sku{is sku?}
+    last_item{last item?}
+    last_url{last url?}
 
-            parse_page --> for_each_item
+    rabbit --> wait_message
+    wait_message --> receive_message
 
-            subgraph for_each_item[for each item]
-                direction TB
+    receive_message --> any_url
 
-                add_sku[add sku]
-                ignore[ignore]
-                fetch_page2[fetch page]
-                parse_page2[parse page]
+    any_url --> |yes| get_first_url
+    any_url --> |no| wait_message
 
-                is_sku{is sku?}
-                is_url{is url?}
+    get_first_url --> fetch_page
+    fetch_page --> parse_page
+    parse_page --> any_item
 
-                is_sku --> |yes| add_sku
-                is_sku --> |no| is_url
+    any_item --> |no| send_items
+    any_item --> |yes| get_first_item
 
-                is_url --> |no| ignore
-                is_url --> |yes| fetch_page2
+    get_first_item --> is_url
 
-                fetch_page2 --> parse_page2
+    is_url --> |yes| fetch_page
+    is_url --> |no| is_sku
 
-                parse_page2 --> is_sku
-            end
-        end
+    is_sku --> |no| ignore_item
+    is_sku --> |yes| save_item
 
-        for_each_url --> send_skus
-    end
+    ignore_item --> last_item
+    save_item --> last_item
+
+    last_item --> |yes| last_url
+    last_item --> |no| get_next_item
+
+    get_next_item --> is_url
+    get_next_url --> fetch_page
+
+    last_url ---> |yes| send_items
+    last_url --> |no| get_next_url
+
+    send_items --> wait_message
 ```

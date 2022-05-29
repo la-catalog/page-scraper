@@ -41,11 +41,11 @@ class Scraper:
 
         This function is a little complicated because:
             1 - fetcher is a coroutine that can receive
-                a url at any time and return it contents
+                a url at any time and return it content
             2 - parser is a generator that can receive
                 a content at any time and return an item
             3 - There is a *while* loop that utilizes
-                both mechanics so at any time parser can
+                both mechanics so at any time the parser can
                 pass a URL for the fetcher and get it content
         """
 
