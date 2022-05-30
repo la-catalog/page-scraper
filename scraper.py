@@ -1,8 +1,7 @@
-from typing import AsyncGenerator
-
 from aio_pika import IncomingMessage
 from la_stopwatch import Stopwatch
 from page_fetcher import Fetcher
+from page_infra import Infra
 from page_parser import Parser
 from page_sku import SKU
 from pydantic import AnyHttpUrl
@@ -11,12 +10,20 @@ from structlog.stdlib import BoundLogger
 
 
 class Scraper:
-    def __init__(self, logger: BoundLogger):
+    def __init__(
+        self, redis_url: str, mongo_url: str, meilisearch_url: str, logger: BoundLogger
+    ):
         self._logger = logger
         self._fetcher = Fetcher(logger=logger)
         self._parser = Parser(logger=logger)
+        self._infra = Infra(
+            redis_url=redis_url,
+            mongo_url=mongo_url,
+            meilisearch_url=meilisearch_url,
+            logger=logger,
+        )
 
-    def on_finish(self, message: IncomingMessage, duration: int):
+    def on_finish(self, message: IncomingMessage, duration: int) -> None:
         body = Body.parse_raw(message.body)
 
         self._logger.info(
@@ -41,6 +48,7 @@ class Scraper:
                 pass a URL for the fetcher and get it content
         """
         body = Body.parse_raw(message.body)
+        skus = []
 
         pages = await self._fetcher.fetch(
             urls=body.urls,
@@ -56,7 +64,7 @@ class Scraper:
                     item = items.send((text, url))
 
                 if isinstance(item, SKU):
-                    yield item
+                    skus.append(item)
                 else:
                     self._logger.warning(
                         event="Item ignored",
@@ -65,4 +73,5 @@ class Scraper:
                         marketplace=body.marketplace,
                     )
 
+        await self._infra.insert_skus(skus=skus, marketplace=body.marketplace)
         await message.ack()

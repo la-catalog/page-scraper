@@ -1,4 +1,5 @@
 import asyncio
+import os
 
 from aio_pika import Connection, connect
 from structlog.stdlib import get_logger
@@ -7,7 +8,12 @@ from scraper import Scraper
 
 logger = get_logger().bind(deployment="sku-scraper")
 
-scraper = Scraper(logger)
+scraper = Scraper(
+    redis_url=os.environ["REDIS_URL"],
+    mongo_url=os.environ["MONGO_URL"],
+    meilisearch_url=os.environ["MEILISEARCH_URL"],
+    logger=logger,
+)
 
 
 async def consume_queue(connection: Connection, queue_name: str):
@@ -23,12 +29,11 @@ async def consume_queue(connection: Connection, queue_name: str):
 
 
 async def main():
-    connection = await connect("amqp://username:password@127.0.0.1:5672")
+    connection = await connect(os.environ["RABBIT_URL"])
 
     async with connection:
         await asyncio.gather(
-            consume_queue(connection, "amazon_sku"),
-            consume_queue(connection, "americanas_sku"),
+            consume_queue(connection, "mercado_livre_sku"),
             consume_queue(connection, "rihappy_sku"),
         )
 
