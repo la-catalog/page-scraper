@@ -29,6 +29,8 @@ async def consume_queue(connection: Connection, queue_name: str):
 
 
 async def main():
+    await scraper.setup()
+
     connection = await connect(os.environ["RABBIT_URL"])
 
     async with connection:

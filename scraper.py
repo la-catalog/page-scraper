@@ -23,7 +23,10 @@ class Scraper:
             logger=logger,
         )
 
-    def on_finish(self, message: IncomingMessage, duration: int) -> None:
+    async def setup(self):
+        await self._infra.setup_collections()
+
+    def on_scrape_finish(self, message: IncomingMessage, duration: int) -> None:
         body = Body.parse_raw(message.body)
 
         self._logger.info(
@@ -33,7 +36,7 @@ class Scraper:
             duration=str(duration),
         )
 
-    @Stopwatch(callback=on_finish)
+    @Stopwatch(callback=on_scrape_finish)
     async def on_message(self, message: IncomingMessage) -> None:
         """
         Scrape URLs and send their SKUs to database.
