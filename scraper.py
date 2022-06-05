@@ -33,17 +33,6 @@ class Scraper:
         await self._infra.setup_sku_database()
         await self._infra.setup_catalog_database()
 
-    def on_scrape_finish(self, message: IncomingMessage, duration: int) -> None:
-        body = Body.parse_raw(message.body)
-
-        self._logger.info(
-            event="Sku scraped",
-            urls=body.urls,
-            marketplace=body.marketplace,
-            duration=str(duration),
-        )
-
-    @Stopwatch(callback=on_scrape_finish)
     async def on_message(self, message: IncomingMessage) -> None:
         """
         Scrape URLs and send their SKUs to database.
@@ -57,16 +46,21 @@ class Scraper:
                 both mechanics so at any time the parser can
                 pass a URL for the fetcher and get it content
         """
+        stopwatch = Stopwatch()
         body = Body.parse_raw(message.body)
+        marketplace = body.marketplace
+        urls = body.urls
         skus = []
 
+        urls = await self._infra.identify_new_urls(urls=urls, marketplace=marketplace)
+
         pages = await self._fetcher.fetch(
-            urls=body.urls,
-            marketplace=body.marketplace,
+            urls=urls,
+            marketplace=marketplace,
         )
 
         async for text, url in pages:
-            items = self._parser.parse(text=text, url=url, marketplace=body.marketplace)
+            items = self._parser.parse(text=text, url=url, marketplace=marketplace)
 
             for item in items:
                 while isinstance(item, AnyHttpUrl):
@@ -80,8 +74,17 @@ class Scraper:
                         event="Item ignored",
                         item=str(item),
                         url=url,
-                        marketplace=body.marketplace,
+                        marketplace=marketplace,
                     )
 
-        await self._infra.insert_skus(skus=skus, marketplace=body.marketplace)
+        skus = await self._infra.identify_new_skus(skus=skus, marketplace=marketplace)
+
+        await self._infra.insert_skus(skus=skus, marketplace=marketplace)
         await message.ack()
+
+        self._logger.info(
+            event="Message processed",
+            urls=urls,
+            marketplace=marketplace,
+            duration=str(stopwatch),
+        )

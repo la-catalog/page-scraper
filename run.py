@@ -2,6 +2,7 @@ import asyncio
 import os
 
 from aio_pika import Connection, connect
+from pamqp.common import Arguments
 from structlog.stdlib import get_logger
 
 from scraper import Scraper
@@ -23,7 +24,9 @@ async def consume_queue(connection: Connection, queue_name: str):
     async with channel:
         await channel.set_qos(prefetch_count=1)
 
-        queue = await channel.declare_queue(name=queue_name, durable=True)
+        queue = await channel.declare_queue(
+            name=queue_name, durable=True, arguments={"x-max-priority": 10}
+        )
 
         await queue.consume(callback=scraper.on_message)
         await asyncio.Future()
