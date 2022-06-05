@@ -11,7 +11,12 @@ from structlog.stdlib import BoundLogger
 
 class Scraper:
     def __init__(
-        self, redis_url: str, mongo_url: str, meilisearch_url: str, logger: BoundLogger
+        self,
+        redis_url: str,
+        mongo_url: str,
+        meilisearch_url: str,
+        meilisearch_key: str,
+        logger: BoundLogger,
     ):
         self._logger = logger
         self._fetcher = Fetcher(logger=logger)
@@ -20,11 +25,13 @@ class Scraper:
             redis_url=redis_url,
             mongo_url=mongo_url,
             meilisearch_url=meilisearch_url,
+            meilisearch_key=meilisearch_key,
             logger=logger,
         )
 
     async def setup(self):
-        await self._infra.setup_collections()
+        await self._infra.setup_sku_database()
+        await self._infra.setup_catalog_database()
 
     def on_scrape_finish(self, message: IncomingMessage, duration: int) -> None:
         body = Body.parse_raw(message.body)

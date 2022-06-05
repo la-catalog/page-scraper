@@ -12,6 +12,7 @@ scraper = Scraper(
     redis_url=os.environ["REDIS_URL"],
     mongo_url=os.environ["MONGO_URL"],
     meilisearch_url=os.environ["MEILISEARCH_URL"],
+    meilisearch_key=os.environ["MEILISEARCH_KEY"],
     logger=logger,
 )
 
