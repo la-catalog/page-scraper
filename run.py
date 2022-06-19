@@ -2,7 +2,6 @@ import asyncio
 import os
 
 from aio_pika import Connection, connect
-from pamqp.common import Arguments
 from structlog.stdlib import get_logger
 
 from scraper import Scraper
