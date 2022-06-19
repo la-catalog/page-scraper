@@ -2,6 +2,7 @@ import asyncio
 import os
 
 from aio_pika import Connection, connect
+from page_infra.options import get_marketplace_infra
 from structlog.stdlib import get_logger
 
 from scraper import Scraper
@@ -17,14 +18,15 @@ scraper = Scraper(
 )
 
 
-async def consume_queue(connection: Connection, queue_name: str):
+async def consume_queue(connection: Connection, marketplace: str):
+    infra = get_marketplace_infra(marketplace=marketplace, logger=logger)
     channel = await connection.channel()
 
     async with channel:
         await channel.set_qos(prefetch_count=1)
 
         queue = await channel.declare_queue(
-            name=queue_name, durable=True, arguments={"x-max-priority": 10}
+            name=infra.sku_queue, durable=True, arguments={"x-max-priority": 10}
         )
 
         await queue.consume(callback=scraper.on_message)
@@ -38,8 +40,8 @@ async def main():
 
     async with connection:
         await asyncio.gather(
-            consume_queue(connection, "mercado_livre_sku"),
-            consume_queue(connection, "rihappy_sku"),
+            consume_queue(connection, "mercado_livre"),
+            consume_queue(connection, "rihappy"),
         )
 
 

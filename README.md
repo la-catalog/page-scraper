@@ -1,4 +1,4 @@
-# sku-scraper
+# page-scraper
 
 # flowchart
 ```mermaid
