@@ -2,8 +2,8 @@ from aio_pika import IncomingMessage
 from la_stopwatch import Stopwatch
 from page_fetcher import Fetcher
 from page_infra import Infra
+from page_models import SKU
 from page_parser import Parser
-from page_sku import SKU
 from pydantic import AnyHttpUrl
 from rabbit_models.sku_scraper import Body
 from structlog.stdlib import BoundLogger
@@ -52,7 +52,15 @@ class Scraper:
         urls = body.urls
         skus = []
 
-        urls = await self._infra.identify_new_urls(urls=urls, marketplace=marketplace)
+        urls = await self._infra.discard_recent_urls(
+            urls=urls,
+            marketplace=marketplace,
+        )
+
+        urls = await self._infra.identify_new_urls(
+            urls=urls,
+            marketplace=marketplace,
+        )
 
         pages = await self._fetcher.fetch(
             urls=urls,
