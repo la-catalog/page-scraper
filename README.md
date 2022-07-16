@@ -21,6 +21,6 @@ flowchart TD
     parse_page --is URL?--> fetch_page
     parse_page --is SKU?--> save_batch
     save_batch --next URL?--> fetch_page
-    save_batch --finish URLs?--> discard_skus_mongo
+    save_batch --no next URL?--> discard_skus_mongo
     discard_skus_mongo --Batch--> insert_skus
 ```
