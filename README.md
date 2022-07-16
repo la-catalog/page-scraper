@@ -1,7 +1,7 @@
 # page-scraper
 Consome da fila do Rabbit os URLs a serem scrapeados e salva os SKUs dos URLs no Mongo.  
 
-# ad-hoc
+# ad hoc
 ```mermaid
 flowchart TD
     rabbit[(RabbitMQ)]
