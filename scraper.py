@@ -5,7 +5,7 @@ from page_infra import Infra
 from page_models import SKU
 from page_parser import Parser
 from pydantic import AnyHttpUrl
-from rabbit_models.sku_scraper import Body
+from rabbit_models.page_scraper import Body
 from structlog.stdlib import BoundLogger
 
 

@@ -1,0 +1,42 @@
+[project]
+name = "page-scraper"
+version = "0.1.0"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [
+    {name = "thiagola92", email = "thiagola92@gmail.com"},
+]
+dependencies = [
+    "aio-pika>=8.0.3",
+    "structlog>=22.1.0",
+    "la-stopwatch>=0.0.8",
+    "pydantic>=1.9.1",
+    "page-parser @ git+https://github.com/la-catalog/page-parser.git",
+    "page-infra @ git+https://github.com/la-catalog/page-infra.git",
+    "page-fetcher @ git+https://github.com/la-catalog/page-fetcher.git",
+    "page-models @ git+https://github.com/la-catalog/page-models.git",
+    "rabbit-models @ git+https://github.com/la-catalog/rabbit-models.git",
+]
+
+[project.urls]
+repository = "https://github.com/la-catalog/page-scraper"
+
+[tool.pdm]
+
+[tool.pdm.scripts]
+sort = "python -m isort -v --ac ."
+
+[tool.pdm.dev-dependencies]
+lint = [
+    "black",
+    "isort"
+]
+
+# [[tool.pdm.source]]
+# url = "https://private-site.org/pypi/simple"
+# verify_ssl = false
+# name = "lacatalog"
+
+[build-system]
+requires = ["pdm-pep517>=0.12.0"]
+build-backend = "pdm.pep517.api"
