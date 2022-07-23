@@ -26,7 +26,7 @@ async def consume_queue(connection: Connection, marketplace: str):
         await channel.set_qos(prefetch_count=1)
 
         queue = await channel.declare_queue(
-            name=infra.sku_queue, durable=True, arguments={"x-max-priority": 10}
+            name=infra.sku_queue, durable=True, arguments={"x-max-priority": 10, "x-queue-mode": "lazy"}
         )
 
         await queue.consume(callback=scraper.on_message)
