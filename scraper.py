@@ -88,6 +88,8 @@ class Scraper:
         skus = await self._infra.identify_new_skus(skus=skus, marketplace=marketplace)
 
         await self._infra.insert_skus(skus=skus, marketplace=marketplace)
+        await self._infra.update_historics(skus=skus, marketplace=marketplace)
+        await self._infra.insert_snapshots(skus=skus, marketplace=marketplace)
         await message.ack()
 
         self._logger.info(
