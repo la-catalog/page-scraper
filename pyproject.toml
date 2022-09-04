@@ -24,7 +24,8 @@ repository = "https://github.com/la-catalog/page-scraper"
 [tool.pdm]
 
 [tool.pdm.scripts]
-sort = "python -m isort -v --ac ."
+unittest = "python -m unittest discover -v -f -s tests"
+isort = "python -m isort -v --ac ."
 
 [tool.pdm.dev-dependencies]
 lint = [
@@ -32,11 +33,11 @@ lint = [
     "isort"
 ]
 
+[build-system]
+requires = ["pdm-pep517>=0.12.0"]
+build-backend = "pdm.pep517.api"
+
 # [[tool.pdm.source]]
 # url = "https://private-site.org/pypi/simple"
 # verify_ssl = false
 # name = "lacatalog"
-
-[build-system]
-requires = ["pdm-pep517>=0.12.0"]
-build-backend = "pdm.pep517.api"
