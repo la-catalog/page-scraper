@@ -260,7 +260,7 @@ version = "0.1.0"
 requires_python = ">=3.10"
 git = "https://github.com/la-catalog/page-fetcher.git"
 revision = "85d77c6f81a1346edc72df292f5949cb041c503e"
-summary = "UNKNOWN"
+summary = ""
 dependencies = [
     "aiohttp[speedups]>=3.8.1",
     "la-catch>=0.0.5",
@@ -305,7 +305,7 @@ version = "0.1.0"
 requires_python = ">=3.10"
 git = "https://github.com/la-catalog/page-parser.git"
 revision = "0e14f3e156d79bdbbb5a00e5626cad8be344316e"
-summary = "UNKNOWN"
+summary = ""
 dependencies = [
     "Babel>=2.10.3",
     "la-catch>=0.0.5",
@@ -456,7 +456,7 @@ version = "0.1.0"
 requires_python = ">=3.10"
 git = "https://github.com/la-catalog/url-parser.git"
 revision = "43975cf4c0375b974494529afeb344751ad9f008"
-summary = "UNKNOWN"
+summary = ""
 dependencies = [
     "la-catch>=0.0.5",
     "pydantic>=1.9.1",
@@ -495,7 +495,7 @@ dependencies = [
 
 [metadata]
 lock_version = "4.0"
-content_hash = "sha256:73441c9e713f1fa8f318b949ef298b41db1641ad52e799195a2700423cd35a22"
+content_hash = "sha256:05db9e73e749b5ea326d49256384cecbf9f96d22938cd1b1a2df1eaf241ea090"
 
 [metadata.files]
 "aio-pika 8.0.3" = [
@@ -1227,6 +1227,7 @@ content_hash = "sha256:73441c9e713f1fa8f318b949ef298b41db1641ad52e799195a2700423
     {url = "https://files.pythonhosted.org/packages/42/83/e43ad2b75ec5798a6292a752576cbbb6cea2a9c93ffe7b620ef81a6fbf20/pymongo-4.2.0-cp310-cp310-manylinux2014_ppc64le.whl", hash = "sha256:314b556afd72eb21a6a10bd1f45ef252509f014f80207db59c97372103c88237"},
     {url = "https://files.pythonhosted.org/packages/48/bf/cb5dec7273ef0c8279608e1b887ec272077d8c478c8bbf09ba29ad1dc81e/pymongo-4.2.0-cp39-cp39-win32.whl", hash = "sha256:a25c0eb2d610b20e276e684be61c337396813b636b69373c17314283cb1a3b14"},
     {url = "https://files.pythonhosted.org/packages/49/04/39af374dea5356233987a284b7bf6dadc009cc88ff4d00909ca20df3c826/pymongo-4.2.0-cp39-cp39-manylinux2014_s390x.whl", hash = "sha256:e7dcb73f683c155885a3488646fcead3a895765fed16e93c9b80000bc69e96cb"},
+    {url = "https://files.pythonhosted.org/packages/4d/51/3d1c827a3099dcd942dabf8c289a5ceabc2f166cf5142ec6ac83153f9d07/pymongo-4.2.0-cp310-cp310-macosx_10_15_universal2.whl", hash = "sha256:b9e4981a65f8500a3a46bb3a1e81b9feb45cf0b2115ad9c4f8d517326d026940"},
     {url = "https://files.pythonhosted.org/packages/4e/bb/7583c54689a5c7eac7ee02583ccab639a7171e81b01121bd85679a301383/pymongo-4.2.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:83cc3c35aeeceb67143914db67f685206e1aa37ea837d872f4bc28d7f80917c9"},
     {url = "https://files.pythonhosted.org/packages/59/6c/e77a01538a5177b8cdb940acc81bdde5b86808b06f6efa388ec0dbc49e47/pymongo-4.2.0-cp310-cp310-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:147a23cd96feb67606ac957744d8d25b013426cdc3c7164a4f99bd8253f649e3"},
     {url = "https://files.pythonhosted.org/packages/59/d7/e2c5fac2ffe8131fa1bde3360b14e6b4c11a0ddecd88a42d6bf78bd18efb/pymongo-4.2.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:1c81414b706627f15e921e29ae2403aab52e33e36ed92ed989c602888d7c3b90"},

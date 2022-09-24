@@ -7,10 +7,10 @@ authors = [
     {name = "thiagola92", email = "thiagola92@gmail.com"},
 ]
 dependencies = [
-    "aio-pika>=8.0.3",
-    "structlog>=22.1.0",
-    "la-stopwatch>=0.0.8",
-    "pydantic>=1.9.1",
+    "aio-pika==8.0.3",
+    "structlog==22.1.0",
+    "la-stopwatch==0.0.8",
+    "pydantic==1.9.1",
     "page-parser @ git+https://github.com/la-catalog/page-parser.git",
     "page-infra @ git+https://github.com/la-catalog/page-infra.git",
     "page-fetcher @ git+https://github.com/la-catalog/page-fetcher.git",
