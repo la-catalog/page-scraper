@@ -30,7 +30,7 @@ class Scraper:
         )
 
     async def setup(self):
-        await self._infra.setup_sku_database()
+        await self._infra.setup_databases()
         await self._infra.setup_catalog_database()
 
     async def on_message(self, message: IncomingMessage) -> None:
@@ -57,7 +57,7 @@ class Scraper:
             marketplace=marketplace,
         )
 
-        urls = await self._infra.identify_new_urls(
+        urls = await self._infra.discard_old_urls(
             urls=urls,
             marketplace=marketplace,
         )
