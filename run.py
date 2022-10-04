@@ -12,8 +12,8 @@ logger = get_logger().bind(deployment="sku-scraper")
 scraper = Scraper(
     redis_url=os.environ["REDIS_URL"],
     mongo_url=os.environ["MONGO_URL"],
-    meilisearch_url=os.environ["MEILISEARCH_URL"],
-    meilisearch_key=os.environ["MEILISEARCH_KEY"],
+    meilisearch_url=os.environ["MEILI_URL"],
+    meilisearch_key=os.environ["MEILI_KEY"],
     logger=logger,
 )
 
@@ -26,7 +26,9 @@ async def consume_queue(connection: Connection, marketplace: str):
         await channel.set_qos(prefetch_count=1)
 
         queue = await channel.declare_queue(
-            name=infra.sku_queue, durable=True, arguments={"x-max-priority": 10, "x-queue-mode": "lazy"}
+            name=infra.sku_queue,
+            durable=True,
+            arguments={"x-max-priority": 10, "x-queue-mode": "lazy"},
         )
 
         await queue.consume(callback=scraper.on_message)

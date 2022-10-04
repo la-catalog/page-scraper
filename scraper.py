@@ -68,7 +68,7 @@ class Scraper:
         )
 
         async for text, url in pages:
-            items = self._parser.parse(text=text, url=url, marketplace=marketplace)
+            items = self._parser.parse_sku(text=text, url=url, marketplace=marketplace)
 
             for item in items:
                 while isinstance(item, AnyHttpUrl):
@@ -84,8 +84,6 @@ class Scraper:
                         url=url,
                         marketplace=marketplace,
                     )
-
-        skus = await self._infra.identify_new_skus(skus=skus, marketplace=marketplace)
 
         await self._infra.insert_skus(skus=skus, marketplace=marketplace)
         await self._infra.update_historics(skus=skus, marketplace=marketplace)
