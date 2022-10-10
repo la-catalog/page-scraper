@@ -10,6 +10,10 @@ dependencies = [
     "structlog==22.1.0",
     "la-stopwatch==0.0.9",
     "pydantic==1.10.2",
+    "page-infra>=0.1.0",
+    "page-fetcher>=0.1.0",
+    "rabbit-models>=0.1.0",
+    "page-parser>=0.1.0",
 ]
 
 [project.urls]
