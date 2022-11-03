@@ -15,6 +15,7 @@ dependencies = [
     "page-fetcher==0.1.0",
     "rabbit-models==0.1.0",
     "page-parser==0.1.0",
+    "url-builder>=0.1.0",
 ]
 
 [project.urls]
@@ -26,7 +27,7 @@ repository = "https://github.com/la-catalog/page-scraper"
 [tool.pdm.scripts]
 unittest = "python -m unittest discover -v -f -s tests"
 black = "python -m black ."
-isort = "python -m isort -v --ac ."
+isort = "python -m isort -v --ac --profile black ."
 
 [tool.pdm.dev-dependencies]
 lint = [

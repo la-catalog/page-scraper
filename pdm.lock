@@ -454,6 +454,12 @@ requires_python = ">=3.7"
 summary = "Backported and Experimental Type Hints for Python 3.7+"
 
 [[package]]
+name = "url-builder"
+version = "0.1.0"
+requires_python = ">=3.10"
+summary = ""
+
+[[package]]
 name = "url-parser"
 version = "None"
 requires_python = ">=3.10"
@@ -496,7 +502,7 @@ dependencies = [
 
 [metadata]
 lock_version = "4.0"
-content_hash = "sha256:f4448004c92079c341995e719ce0aa66bad15dcc3e2efeba53da5411e5d538d5"
+content_hash = "sha256:cffaa11abc62de5689e749abfe3df29944a48ce78cde53a13085d0e38247b2a5"
 
 [metadata.files]
 "aio-pika 8.2.4" = [
