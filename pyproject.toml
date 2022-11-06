@@ -7,7 +7,7 @@ authors = [
     {name = "thiagola92", email = "thiagola92@gmail.com"},
 ]
 dependencies = [
-    "aio-pika==8.2.4",
+    "aio-pika==8.2.2",
     "structlog==22.1.0",
     "la-stopwatch==0.0.9",
     "pydantic==1.10.2",
@@ -15,7 +15,7 @@ dependencies = [
     "page-fetcher==0.1.0",
     "rabbit-models==0.1.0",
     "page-parser==0.1.0",
-    "url-builder>=0.1.0",
+    "url-builder==0.1.0",
 ]
 
 [project.urls]
